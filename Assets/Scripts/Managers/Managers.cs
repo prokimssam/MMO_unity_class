@@ -6,11 +6,14 @@ using UnityEngine.PlayerLoop;
 
 public class Managers : MonoBehaviour
 {
-    static Managers Instance;  //유일성
-    public static Managers GetInstance( )
+    static Managers s_Instance;  //유일성
+    public static Managers Instance
     {
-        Init();
-        return Instance;
+        get
+        {
+            Init();
+            return s_Instance;
+        }
     }
 
     private void Start()
@@ -20,7 +23,7 @@ public class Managers : MonoBehaviour
 
     private static void Init()
     {
-        if (Instance == null)
+        if (s_Instance == null)
         {
             GameObject go = GameObject.Find("@Managers");
             if (go == null)
@@ -29,7 +32,7 @@ public class Managers : MonoBehaviour
                 go.AddComponent<Managers>();
             }
             DontDestroyOnLoad(go);
-            Instance = go.GetComponent<Managers>();
+            s_Instance = go.GetComponent<Managers>();
         }
     }
 }
