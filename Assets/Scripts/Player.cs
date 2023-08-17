@@ -11,9 +11,14 @@ public class Player : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    public float _yAngle = 0;
     void Update()
     {
+        _yAngle += Time.deltaTime * 100;
+        //transform.eulerAngles = new Vector3(0, _yAngle, 0);
+        transform.rotation = Quaternion.Euler(new Vector3(0, _yAngle, 0));
+        //transform.Rotate(new Vector3(0, Time.deltaTime * 100, 0));
+        
         if (Input.GetKey(KeyCode.W))
             transform.Translate(Vector3.forward * Time.deltaTime * _speed);
     
