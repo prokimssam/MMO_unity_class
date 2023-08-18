@@ -7,7 +7,7 @@ using UnityEngine.PlayerLoop;
 public class Managers : MonoBehaviour
 {
     static Managers s_Instance;  //유일성
-    public static Managers Instance
+    static Managers Instance
     {
         get
         {
@@ -16,9 +16,20 @@ public class Managers : MonoBehaviour
         }
     }
 
+    private InputManager _input = new InputManager();
+    public static InputManager Input
+    {
+        get { return Instance._input; }
+    }
+
     private void Start()
     {
         Init();
+    }
+
+    private void Update()
+    {
+        _input.OnUpdate();
     }
 
     private static void Init()
