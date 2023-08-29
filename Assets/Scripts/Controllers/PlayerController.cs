@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -7,15 +8,52 @@ public class PlayerController : MonoBehaviour
 {
     public float _speed = 3.0f;
     
+    private Vector3 _destPos;
+    private bool _moveToDest = false;
     void Start()
     {
         Managers.Input.KeyAction += OnKeyboard;
+        Managers.Input.MouseAction += OnMouseClicked;
     }
 
-    void Update()
+    private void Update()
     {
-        
+        if (_moveToDest)
+        {
+            Vector3 dir = _destPos - transform.position;
+            if (dir.magnitude < 0.00001f)
+            {
+                _moveToDest = false;
+            }
+            else
+            {
+                float moveDist = Math.Clamp(_speed * Time.deltaTime, 0, dir.magnitude);
+                transform.position += dir.normalized * moveDist;
+                if (dir.magnitude > 0.01f)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir),
+                        10 * Time.deltaTime);
+                }
+            }
+        }
     }
+
+    private void OnMouseClicked(Define.MouseEvent obj)
+    {
+        if (obj != Define.MouseEvent.Click)
+            return;
+        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100, Color.red, 1.0f);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("Wall")))
+        {
+            _destPos = hit.point;
+            _moveToDest = true;
+        }
+    }
+
 
     void OnKeyboard()
     {
@@ -43,5 +81,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.left), t);
             transform.position += Vector3.left * Time.deltaTime * _speed;
         }
+        
+        _moveToDest = false;
     }
 }
