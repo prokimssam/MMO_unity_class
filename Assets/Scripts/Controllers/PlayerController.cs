@@ -9,53 +9,75 @@ public class PlayerController : MonoBehaviour
     public float _speed = 3.0f;
     
     private Vector3 _destPos;
-    private bool _moveToDest = false;
     void Start()
     {
         Managers.Input.MouseAction += OnMouseClicked;
     }
 
-    private float wait_run_ratio = 0;
+    public enum PlayerState
+    {
+        Die,
+        Moving,
+        Idle,
+    }
+
+    private PlayerState _state = PlayerState.Idle;
+    
     private void Update()
     {
-        if (_moveToDest)
+        switch (_state)
         {
-            Vector3 dir = _destPos - transform.position;
-            if (dir.magnitude < 0.00001f)
-            {
-                _moveToDest = false;
-            }
-            else
-            {
-                float moveDist = Math.Clamp(_speed * Time.deltaTime, 0, dir.magnitude);
-                transform.position += dir.normalized * moveDist;
-                if (dir.magnitude > 0.01f)
-                {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir),
-                        10 * Time.deltaTime);
-                }
-            }
+            case PlayerState.Die :
+                UpdateDie();
+                break;
+            case PlayerState.Moving :
+                UpdateMoving();
+                break;
+            case PlayerState.Idle :
+                UpdateIdle();
+                break;
+        }
+    }
+
+   private void UpdateIdle()
+    {
+        Animator anim = GetComponent<Animator>();
+        anim.SetFloat("speed", 0);
+    }
+
+    private void UpdateMoving()
+    {
+        Vector3 dir = _destPos - transform.position;
+        if (dir.magnitude < 0.00001f)
+        {
+            _state = PlayerState.Idle;
+            return;
+        }
+        
+        //이동
+        float moveDist = Math.Clamp(_speed * Time.deltaTime, 0, dir.magnitude);
+        transform.position += dir.normalized * moveDist;
+        if (dir.magnitude > 0.01f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir),
+                10 * Time.deltaTime);
         }
         
         //애니메이션
-        if (_moveToDest)
-        {
-            Animator anim = GetComponent<Animator>();
-            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 1, 20 * Time.deltaTime);
-            anim.SetFloat("wait_run_ratio", 1);
-            anim.Play("WAIT_RUN");
-        }
-        else
-        {
-            Animator anim = GetComponent<Animator>();
-            wait_run_ratio = Mathf.Lerp(wait_run_ratio, 0, 20 * Time.deltaTime);
-            anim.SetFloat("wait_run_ratio", 0);
-            anim.Play("WAIT_RUN");
-        }
+        Animator anim = GetComponent<Animator>();
+        anim.SetFloat("speed", _speed);
+    }
+
+    private void UpdateDie()
+    {
+        Debug.Log("Player die!!!!!");
     }
 
     private void OnMouseClicked(Define.MouseEvent obj)
     {
+        if (_state == PlayerState.Die)
+            return;
+        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(Camera.main.transform.position, ray.direction * 100, Color.red, 1.0f);
 
@@ -63,7 +85,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("Wall")))
         {
             _destPos = hit.point;
-            _moveToDest = true;
+            _state = PlayerState.Moving;
         }
     }
 }
