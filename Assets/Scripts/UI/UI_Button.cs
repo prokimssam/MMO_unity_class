@@ -7,8 +7,8 @@ using Object = UnityEngine.Object;
 
 public class UI_Button : MonoBehaviour
 {
-    private Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, Object[]>(); 
-        
+    private Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, Object[]>();
+    
     enum Buttons {
         PointButton
     }
@@ -23,6 +23,8 @@ public class UI_Button : MonoBehaviour
     {
         Bind<Button>(typeof(Buttons));
         Bind<TextMeshProUGUI>(typeof(Texts));
+        
+        Get<TextMeshProUGUI>((int)Texts.ScoreText).text = "Bind test";
     }
 
     void Bind<T>(Type type) where T : UnityEngine.Object
@@ -36,6 +38,15 @@ public class UI_Button : MonoBehaviour
             Debug.Log($"name : {names[i]}");
             objects[i] = Util.FindChild<T>(gameObject, names[i], true);
         }
+    }
+
+    T Get<T>(int idx) where T : UnityEngine.Object
+    {
+        UnityEngine.Object[] objects = null;
+        if (_objects.TryGetValue(typeof(T), out objects) == false)
+            return null;
+
+        return objects[idx] as T;
     }
 
     private int _score = 0;
