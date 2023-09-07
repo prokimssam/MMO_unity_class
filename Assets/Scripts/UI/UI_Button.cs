@@ -19,10 +19,16 @@ public class UI_Button : MonoBehaviour
         ScoreText,
     }
 
+    enum GameObjects
+    {
+        TestObject
+    }
+
     private void Start()
     {
         Bind<Button>(typeof(Buttons));
         Bind<TextMeshProUGUI>(typeof(Texts));
+        Bind<GameObject>(typeof(GameObjects));
         
         Get<TextMeshProUGUI>((int)Texts.ScoreText).text = "Bind test";
     }
@@ -35,8 +41,13 @@ public class UI_Button : MonoBehaviour
         
         for (int i = 0; i < names.Length; i++)
         {
-            Debug.Log($"name : {names[i]}");
-            objects[i] = Util.FindChild<T>(gameObject, names[i], true);
+            if (typeof(T) == typeof(GameObject))
+                objects[i] = Util.FindChild(gameObject, names[i], true);
+            else 
+                objects[i] = Util.FindChild<T>(gameObject, names[i], true);
+            
+            if (objects[i] == null)
+                Debug.Log($"Fail to bind({names[i]})");
         }
     }
 
