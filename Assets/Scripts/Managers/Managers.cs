@@ -17,16 +17,13 @@ public class Managers : MonoBehaviour
     }
 
     private InputManager _input = new InputManager();
-    public static InputManager Input
-    {
-        get { return Instance._input; }
-    }
+    public static InputManager Input { get { return Instance._input; } }
 
     private ResourceManager _resource = new ResourceManager();
-    public static ResourceManager Resource
-    {
-        get { return Instance._resource; }
-    }
+    public static ResourceManager Resource { get { return Instance._resource; } }
+
+    private UIManager _ui = new UIManager();
+    public static UIManager UI { get { return Instance._ui; } }
 
     private void Start()
     {
