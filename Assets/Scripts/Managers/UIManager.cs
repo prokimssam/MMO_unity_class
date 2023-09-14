@@ -7,6 +7,17 @@ public class UIManager
     private int _order = 10;
     private Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
 
+    public GameObject Root
+    {
+        get
+        {
+            GameObject root = GameObject.Find("@UI_Root");
+            if (root == null)
+                root = new GameObject { name = "@UI_Root"};
+            return root;
+        }
+    }
+
     public void SetCanvas(GameObject go, bool sort = true)
     {
         Canvas canvas = Util.GetOrAddComponent<Canvas>(go);
@@ -34,10 +45,7 @@ public class UIManager
         
         _popupStack.Push(popup);
 
-        GameObject root = GameObject.Find("@UI_Root");
-        if (root == null)
-            root = new GameObject { name = "@UI_Root"};
-        go.transform.SetParent(root.transform);
+        go.transform.SetParent(Root.transform);
         
         return popup;
     }
