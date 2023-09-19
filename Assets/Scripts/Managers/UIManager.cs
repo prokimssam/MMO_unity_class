@@ -45,6 +45,8 @@ public class UIManager
         T sceneUI = Util.GetOrAddComponent<T>(go);
         _sceneUI = sceneUI;
         
+        go.transform.SetParent(Root.transform);
+        
         return sceneUI;
     }
     
