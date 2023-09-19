@@ -17,7 +17,7 @@ public class UI_Inven_Item : UI_Base
     {
         Bind<GameObject>(typeof(GameObjects));
         GetGameObject((int)GameObjects.ItemNameText).GetComponent<TextMeshProUGUI>().text = _name;
-        GetGameObject((int)GameObjects.ItemIcon).AddUIEvent((data =>
+        GetGameObject((int)GameObjects.ItemIcon).BindEvent((data =>
         {
             Debug.Log($"아이템 클릭 : {_name}");
         }));

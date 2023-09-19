@@ -45,12 +45,12 @@ public class UI_Button : UI_Popup
         GetTextMeshProUGUI((int)Texts.ScoreText).text = "Bind Test2";
 
         GameObject go = GetImage((int)Images.ItemIcon).gameObject;
-        AddUIEvent(go, (PointerEventData data) =>
+        BindEvent(go, (PointerEventData data) =>
         {
             go.transform.position = data.position;
         }, Define.UIEvent.Drag);
         
-        GetButton((int)Buttons.PointButton).gameObject.AddUIEvent(OnButtonClicked);
+        GetButton((int)Buttons.PointButton).gameObject.BindEvent(OnButtonClicked);
     }
 
     private int _score = 0;
