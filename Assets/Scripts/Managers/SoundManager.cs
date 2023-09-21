@@ -5,6 +5,7 @@ using UnityEngine;
 public class SoundManager
 {
     private AudioSource[] _audioSources = new AudioSource[(int)Define.Sound.MaxCount];
+    private Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
     
     public void Init()
     {
@@ -33,7 +34,7 @@ public class SoundManager
 
         if (type == Define.Sound.Bgm)
         {
-            AudioClip audioClip = Managers.Resource.Load<AudioClip>(path);
+            AudioClip audioClip = GetOrAddAudioClip(path);
             if (audioClip == null)
             {
                 Debug.Log($"AudioClip Missing! {path}");
@@ -50,7 +51,7 @@ public class SoundManager
         }
         else
         {
-            AudioClip audioClip = Managers.Resource.Load<AudioClip>(path);
+            AudioClip audioClip = GetOrAddAudioClip(path);
             if (audioClip == null)
             {
                 Debug.Log($"AudioClip Missing! {path}");
@@ -61,5 +62,28 @@ public class SoundManager
             audioSource.pitch = pitch;
             audioSource.PlayOneShot(audioClip);
         }
+    }
+
+    private AudioClip GetOrAddAudioClip(string path)
+    {
+        AudioClip audioClip = null;
+        if (_audioClips.TryGetValue(path, out audioClip) == false)
+        {
+            audioClip = Managers.Resource.Load<AudioClip>(path);
+            _audioClips.Add(path, audioClip);
+        }
+
+        return audioClip;
+    }
+
+    public void Clear()
+    {
+        foreach (AudioSource audioSource in _audioSources)
+        {
+            audioSource.clip = null;
+            audioSource.Stop();
+        }
+        
+        _audioClips.Clear();
     }
 }
