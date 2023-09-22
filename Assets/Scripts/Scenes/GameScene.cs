@@ -10,10 +10,16 @@ public class GameScene : BaseScene
         base.Init();
         SceneType = Define.Scene.Game;
         Managers.UI.ShowSceneUI<UI_Inven>();
+
+        for (int i = 0; i < 3; i++)
+        {
+            Managers.Resource.Instantiate("UnityChan");
+            Managers.Resource.Instantiate("Tank");
+        }
     }
 
     public override void Clear()
     {
-        throw new System.NotImplementedException();
+        
     }
 }
