@@ -34,6 +34,9 @@ public class Managers : MonoBehaviour
 
     private PoolManager _pool = new PoolManager();
     public static PoolManager Pool { get { return Instance._pool; } }
+
+    private DataManager _data = new DataManager();
+    public static DataManager Data { get { return Instance._data; } }
     
     private void Start()
     {
@@ -59,6 +62,7 @@ public class Managers : MonoBehaviour
             s_Instance = go.GetComponent<Managers>();
             s_Instance._sound.Init();
             s_Instance._pool.Init();
+            s_Instance._data.Init();
         }
     }
 

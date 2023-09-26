@@ -10,6 +10,9 @@ public class GameScene : BaseScene
         base.Init();
         SceneType = Define.Scene.Game;
         Managers.UI.ShowSceneUI<UI_Inven>();
+
+        Stat levelStat = Managers.Data.StatDic[1];
+        Debug.Log("levelStat.level : " + levelStat.level);
     }
 
     public override void Clear()
