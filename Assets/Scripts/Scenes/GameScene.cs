@@ -11,8 +11,9 @@ public class GameScene : BaseScene
         SceneType = Define.Scene.Game;
         Managers.UI.ShowSceneUI<UI_Inven>();
 
-        Stat levelStat = Managers.Data.StatDic[1];
-        Debug.Log("levelStat.level : " + levelStat.level);
+        Data.Stat levelStat = Managers.Data.StatDic[1];
+
+        gameObject.GetOrAddComponent<CursorController>();
     }
 
     public override void Clear()
