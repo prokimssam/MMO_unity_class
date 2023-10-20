@@ -37,7 +37,7 @@ public class InputManager
                 {
                     if (Time.time - _pressedTime < 0.2f) 
                         MouseAction.Invoke(Define.MouseEvent.Click);    
-                    MouseAction.Invoke(Define.MouseEvent.PinterUp); 
+                    MouseAction.Invoke(Define.MouseEvent.PointerUp); 
                 }
                 _pressed = false;
                 _pressedTime = 0;

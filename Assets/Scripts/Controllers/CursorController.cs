@@ -31,6 +31,9 @@ public class CursorController : MonoBehaviour
     
     private void UpdateMouseCursor()
     {
+        if (Input.GetMouseButton(0))
+            return;
+        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 100, _mask))
